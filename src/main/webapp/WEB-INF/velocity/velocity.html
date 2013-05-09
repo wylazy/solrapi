@@ -1,0 +1,56 @@
+#macro(pager $total $pageSize)
+	#set($baseUrl = "?")
+	#set($keys = $request.getParameterNames())
+	#foreach($key in $keys)
+		#if("page" != $key)
+			#set($baseUrl =$baseUrl + $key + "=" + $request.getParameter($key) + "&")
+		#end
+	#end
+
+	## 计算总页数
+	#if($total % $pageSize > 0)
+		#set($pageCount = ($total / $pageSize) + 1)
+	#else
+		#set($pageCount = ($total / $pageSize))
+	#end
+	
+	## 当前页
+	#set($page = $numberTool.toNumber($request.getParameter("page")))
+	
+	#if(!$page || $page <= 0)
+		#set($page=1)
+	#end
+	
+	#set($startIndex = 1)
+	#set($endIndex = $pageCount)
+	
+	#if($page > 9)
+		#set($startIndex = $page - 5)
+	#end
+	
+	#set($p = $pageCount - 5)
+	#if($page < $p)
+		#set($endIndex = $page + 5)
+	#end
+	
+	<div class="pagination pagination-centered">
+		<ul >
+			#if($startIndex > 1)
+				#set($sp = $startIndex - 1)
+				<li><a href="${baseUrl}page=1">首页</a></li>
+				<li><a href="${baseUrl}page=${sp}">...</a></li>
+			#end
+			#foreach($idx in [$startIndex .. $endIndex])
+				#if($idx == $page)
+					<li class="active"><a href="${baseUrl}page=$idx">$idx</a></li>
+				#else
+					<li><a href="${baseUrl}page=$idx">$idx</a></li>
+				#end
+			#end
+			#if($endIndex < $pageCount)
+				#set($ep = $endIndex + 1)
+				<li><a href="${baseUrl}page=${ep}">...</a></li>
+			#end
+	    </ul>
+	</div>
+#end

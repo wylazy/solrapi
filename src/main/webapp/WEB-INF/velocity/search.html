@@ -1,0 +1,37 @@
+#parse("velocity.html")
+<!doctype>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>搜索结果</title>
+		#parse("common_css.template")
+	</head>
+	<body>
+		<div class="sfbgg">
+			<a class="search_logo" href="$rc.contextPath"></a>
+			<div class="search_form">
+				<form>
+					<input type="search" class="span8" name="q" value='$request.getParameter("q")'>
+					<input type="submit" class="btn-success searchbtn" value="搜索">
+				</form>
+			</div>
+		</div>
+		<div class="container">
+			<small style="line-height:2.5;">找到约$totalNum条记录，（用时约$elapsedTime秒）</small>
+			<div style="height:5px;"></div>
+			#foreach($webDoc in $docs) 
+				<div class="search_item">
+					<div><a href="$webDoc.url">$webDoc.title</a></div>
+					<div><cite>$webDoc.url</cite></div>
+					<div>$webDoc.content</div>
+				</div>
+			#end
+			<center>
+				#pager($totalNum, 10)
+			</center>
+			
+		</div>
+		
+	</body>
+	#parse("common_js.template")
+</html>
